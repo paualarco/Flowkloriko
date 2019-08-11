@@ -3,13 +3,10 @@ package webserver
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, get, pathSingleSlash, post}
-import akka.kafka.{ConsumerSettings, Subscriptions}
-import akka.kafka.javadsl.Consumer
 import akka.stream.ActorMaterializer
 import backend.Master
-import backend.pipeline.Flow
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.serialization.{ByteArrayDeserializer, StringDeserializer}
+import backend.flow.Flowkloriko
+import backend.flow.Flowkloriko.Start
 
 import scala.io.StdIn
 
@@ -25,28 +22,23 @@ object WebServer extends App with WebServerJsonSupport {
         ,
         post {
           concat(
-            entity(as[Flow.CreateFlow]) { createPipeline =>
+            entity(as[Master.CreateFlow]) { createPipeline =>
               master ! createPipeline
               complete(s"Received $createPipeline")
             }
             ,
-            entity(as[Flow.ModifyFlow]) { modifyPipeline =>
+
+            entity(as[Master.ModifyFlow]) { modifyPipeline =>
               complete(s"Received $modifyPipeline")
             }
             ,
-            entity(as[Flow.StartFlow]) { startPipeline =>
-              val config = system.settings.config.getConfig("akka.kafka.consumer")
-              val consumerSettings =
-                ConsumerSettings(config, new StringDeserializer, new ByteArrayDeserializer)
-                  .withBootstrapServers("")
-                  .withGroupId("group1")
-                  .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-              val subscription = Subscriptions.topics("topic")
-              val consumer = Consumer.plainSource(consumerSettings, subscription)
+            entity(as[Master.StartFlow]) { startPipeline =>
+              val flowkloriko = system.actorOf(Flowkloriko.props)
+              flowkloriko ! Start()
               complete(s"Received $startPipeline")
             }
             ,
-            entity(as[Flow.StopFlow]) { stopPipeline =>
+            entity(as[Master.StopFlow]) { stopPipeline =>
               complete(s"Received $stopPipeline")
             }
 

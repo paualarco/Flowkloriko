@@ -23,14 +23,17 @@ val akkaVersion = "2.5.23"
 val akkaHttpVersion = "10.1.8"
 
 libraryDependencies ++= Seq(
+  "org.scalacheck"           %% "scalacheck"               % "1.13.5"    % Test,
+  "org.scalatest"            %% "scalatest"                % "3.0.8"     % "test",
   "com.typesafe.akka"        %% "akka-stream"              % akkaVersion,
   "com.typesafe.akka"        %% "akka-http"                % akkaHttpVersion,
-  "org.scalacheck"           %% "scalacheck"               % "1.13.5"    % Test,
-  "junit"                    % "junit"                     % "4.10"      % Test,
-  "org.scalatest"            %% "scalatest"                % "3.0.8"     % "test",
+  "com.typesafe.akka"        %% "akka-testkit"             % akkaVersion  % Test,
   "com.typesafe.akka"        %% "akka-http-spray-json"     % "10.1.9",
-  "com.typesafe.akka"        %% "akka-stream-kafka"        % "1.0.5",
-  "org.testcontainers"        %% "testcontainers"          % "1.5.0" %  "test")
+  "com.typesafe.akka"        %% "akka-remote"              % akkaVersion,
+  "org.apache.spark"         %% "spark-core"               % "2.4.0",
+  "org.apache.spark"         %% "spark-streaming"          % "2.4.0",
+  "org.apache.spark"         %% "spark-hive"               % "2.4.0")
+
 
 mainClass in (Compile, run) := Some("WebServer")
 

@@ -1,0 +1,14 @@
+{
+  "pipelineToBeCreated":
+  {"id":"pipe000",
+    "sources":[
+      {"id":"source0","dataPoint":"kafka","configs":["a"],"pipeTo":["processor"]}
+    ],
+    "processors":[
+      {"id":"source0","processor":"kafka","pipeTo":["sink"],"pipedFrom":["source"]}
+    ],
+    "sinks":[
+      {"id":"source0","dataPoint":"kafka","configs":["a"],"pipedFrom":["processor"]}
+    ]
+  }
+}

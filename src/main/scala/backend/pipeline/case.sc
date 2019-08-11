@@ -1,13 +1,7 @@
-case class Test() {
-  def this(id: Int) = this()
+import backend.flow.Flowkloriko
+import backend.flow.Flowkloriko.Start
 
+for (i <- 1 to 20){
+  Thread.sleep(500)
+  println("Hello")
 }
-
-class TestClass(name: String) {
-  def this(id: Int) = this(id.toString)
-
-}
-new TestClass( 1)
-
-val test = new Test(1)
-test.
